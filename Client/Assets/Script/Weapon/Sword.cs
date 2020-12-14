@@ -9,9 +9,9 @@ public class Sword : Weapon
     [SerializeField]
     private TrailRenderer trailRenderer = null;
 
-    public override void Initialize(string actorTag, Status status)
+    public override void Initialize(Actor actor)
     {
-        base.Initialize(actorTag, status);
+        base.Initialize(actor);
         Cancel();
     }
 
@@ -47,8 +47,8 @@ public class Sword : Weapon
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isAttack = (actorTag == "Player" && collision.tag == "Enemy") ||
-                        (actorTag == "Enemy" && collision.tag == "Player");
+        bool isAttack = (actor.ActorTag == "Player" && collision.tag == "Enemy") ||
+                        (actor.ActorTag == "Enemy" && collision.tag == "Player");
 
         if (!isAttack)
             return;
@@ -57,6 +57,6 @@ public class Sword : Weapon
         if (targetActor == null)
             return;
 
-        targetActor.Hit(status);
+        targetActor.Hit(actor.Status);
     }
 }

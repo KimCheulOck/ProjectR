@@ -12,9 +12,9 @@ public class Bow : Weapon
 
     private const int ARROWS_MAX = 10;
 
-    public override void Initialize(string actorTag, Status status)
+    public override void Initialize(Actor actor)
     {
-        base.Initialize(actorTag, status);
+        base.Initialize(actor);
         Cancel();
     }
 
@@ -31,12 +31,21 @@ public class Bow : Weapon
 
     private IEnumerator Action()
     {
-        float range = 10.0f;
         Vector3 clickPosition = action.ClickLocation;
+        Vector2 dir = clickPosition - actor.transform.position;
+        //Vector3 angle = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        float range = 10.0f;
         int attackCount = 1;
         int loop = 0;
+
         while (true)
         {
+            if (loop == attackCount)
+                break;
+
+            loop++;
+
             int arrowIndex = -1;
             for (int i = 0; i < arrows.Count; ++i)
             {
@@ -54,10 +63,7 @@ public class Bow : Weapon
             {
                 Arrow arrow = InstanceController.Create<Arrow>(loadPrefab, arrowParent);
                 if (arrow == null)
-                {
-                    loop++;
                     continue;
-                }
 
                 arrow.SafeSetActive(false);
                 arrowIndex = arrows.Count;
@@ -66,15 +72,12 @@ public class Bow : Weapon
 
             yield return new WaitForSeconds(1.0f);
 
-            if (loop == attackCount)
-                break;
-            
             arrows[arrowIndex].SafeSetActive(true);
             arrows[arrowIndex].transform.position = arrowParent.position;
-            arrows[arrowIndex].transform.rotation = arrowParent.rotation;
+            arrows[arrowIndex].transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             arrows[arrowIndex].transform.localScale = arrowParent.localScale;
-            arrows[arrowIndex].Shoot(actorTag, status, 1.0f, range, clickPosition);
-            loop++;
+            arrows[arrowIndex].Shoot(actor.ActorTag, actor.Status, 1.0f, range, clickPosition);
+            
         }
     }
 }

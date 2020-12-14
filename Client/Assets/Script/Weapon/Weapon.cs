@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    protected Actor actor;
     protected Action action;
-    protected Status status;
-    protected string actorTag;
 
-    public virtual void Initialize(string actorTag, Status status)
+    public virtual void Initialize(Actor actor)
     {
-        this.actorTag = actorTag;
-        this.status = status;
+        this.actor = actor;
     }
 
     public virtual void Use(Action action)

@@ -14,7 +14,7 @@ public class Actor : MonoBehaviour
 
     protected StateMachine stateMachine = null;
     protected ActionMachine actionMachine = null;
-    protected string tag = "";
+    public string ActorTag { get; protected set; }
 
     public void ChangeState(BodyType bodyType, StateType stateType, params object[] extraData)
     {
@@ -72,7 +72,7 @@ public class Actor : MonoBehaviour
 
         if (stateType == StateType.Attack)
         {
-            weapon.Initialize(tag, Status);
+            weapon.Initialize(this);
             weapon.Use(action);
         }
         else

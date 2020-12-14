@@ -14,9 +14,9 @@ public class ArrowBox : Weapon
 
     private const int ARROWS_MAX = 10;
 
-    public override void Initialize(string actorTag, Status status)
+    public override void Initialize(Actor actor)
     {
-        base.Initialize(actorTag, status);
+        base.Initialize(actor);
         Cancel();
     }
 
