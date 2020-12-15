@@ -1600,10 +1600,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map_Square
       objectReference: {fileID: 0}
-    - target: {fileID: 5495958170906212430, guid: 6489ef925daa02941b6c57c3f11b0270, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8307846052244028107, guid: 6489ef925daa02941b6c57c3f11b0270, type: 3}
       propertyPath: m_RootOrder
       value: 0
