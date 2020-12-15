@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class Singleton<T> where T : class
+public class Singleton<T> where T : class
 {
     protected static T instance = null;
 

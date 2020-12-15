@@ -1,6 +1,7 @@
 ﻿public class Status
 {
     public int level = 1;
+    public int exp = 0;
     public int hp = 100;
     public int mp = 50;
     public int attack = 10;
