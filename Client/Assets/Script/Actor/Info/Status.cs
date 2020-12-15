@@ -1,18 +1,19 @@
-﻿public class Status
+﻿[System.Serializable]
+public class Status
 {
     public int level = 1;
     public int exp = 0;
-    public int hp = 100;
-    public int mp = 50;
-    public int attack = 10;
-    public int defense = 5;
-    public int hit = 10;
-    public int avoid = 10;
-    public int critical = 1;
-    public float atkSpeed = 1.0f;
-    public float moveSpeed = 10.0f;
-    public float spellSpeed = 1.0f;
-    public int elemental = 2;
+    public int hp = 0;
+    public int mp = 0;
+    public int attack = 0;
+    public int defense = 0;
+    public int hit = 0;
+    public int avoid = 0;
+    public int critical = 0;
+    public float atkSpeed = 0;
+    public float moveSpeed = 0;
+    public float spellSpeed = 0;
+    public int elemental = 0;
 
     // 체력           : HP 상승
     // 마력           : MP 상승
