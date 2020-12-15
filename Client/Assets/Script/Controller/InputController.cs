@@ -2,14 +2,14 @@
 
 public class InputController : MonoBehaviour
 {
+    private const int MOUSELEFT = 0;
+    private const int MOUSERIGHT = 1;
+
     public delegate void OnKeyEvent(BodyType bodyType, StateType stateType, params object[] extraData);
     public delegate bool OnKeyDelayEvent(BodyType bodyType);
     public static OnKeyEvent onKeyEventMove = null;
     public static OnKeyEvent onKeyEventAttack = null;
     public static OnKeyDelayEvent onKeyEventWaiting = null;
-
-    private const int MOUSELEFT = 0;
-    private const int MOUSERIGHT = 1;
 
     private void Update()
     {
@@ -51,8 +51,8 @@ public class InputController : MonoBehaviour
 
         if (Input.GetMouseButton(MOUSELEFT))
         {
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            onKeyEventAttack(BodyType.Up, StateType.Attack, pos);
+            //Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            onKeyEventAttack(BodyType.Up, StateType.Attack);
         }
         else if (Input.GetMouseButton(MOUSERIGHT))
         {

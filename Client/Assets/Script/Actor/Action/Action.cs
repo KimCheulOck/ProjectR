@@ -7,7 +7,16 @@ public class Action
     protected ActionType actionType;
     protected float waitingTime;
     public object[] extraData;
-    public Vector2 ClickLocation { get { return (Vector2)extraData[0]; } }
+    public Vector2 ClickLocation
+    {
+        get
+        {
+            // 해당 엑터가 내꺼인지 아닌지에 따라
+            // 1. 내꺼, 2. 몬스터 or NPC, 3. 타 유저
+            return Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            //return (Vector2)extraData[0];
+        }
+    }
 
     public Action(Actor actor, ActionType actionType)
     {

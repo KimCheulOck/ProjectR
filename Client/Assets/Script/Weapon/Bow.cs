@@ -31,10 +31,6 @@ public class Bow : Weapon
 
     private IEnumerator Action()
     {
-        Vector3 clickPosition = action.ClickLocation;
-        Vector2 dir = clickPosition - actor.transform.position;
-        //Vector3 angle = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         float range = 10.0f;
         int attackCount = 1;
         int loop = 0;
@@ -71,6 +67,10 @@ public class Bow : Weapon
             }
 
             yield return new WaitForSeconds(1.0f);
+
+            Vector3 clickPosition = action.ClickLocation;
+            Vector2 dir = clickPosition - actor.transform.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
             arrows[arrowIndex].SafeSetActive(true);
             arrows[arrowIndex].transform.position = arrowParent.position;

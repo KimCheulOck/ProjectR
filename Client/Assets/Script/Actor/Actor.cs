@@ -26,8 +26,11 @@ public class Actor : MonoBehaviour
         Action action = actionMachine.GetAction(bodyType);
         stateMachine.ChangeState(bodyType, stateType, action, extraData);
 
-        UseWeapon(leftWeapon, stateType, action);
-        UseWeapon(rightWeapon, stateType, action);
+        if (bodyType == BodyType.Up)
+        {
+            UseWeapon(leftWeapon, stateType, action);
+            UseWeapon(rightWeapon, stateType, action);
+        }
     }
 
     public void ChangeStatus(Status stats)

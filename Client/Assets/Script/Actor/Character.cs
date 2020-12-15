@@ -56,13 +56,13 @@ public class Character : Actor
         float minRotation = -60;
         float x = 0;
         float y = 0;
-        bool isRight = characterTransform.localScale.x == 1;
+        bool isRight = characterTransform.localScale.x == -1;
         Vector2 bodyPos = characterTransform.position;
 
         x = isRight ? (mouse.x - bodyPos.x) : (bodyPos.x - mouse.x);
         y = isRight ? (mouse.y - bodyPos.y) : (bodyPos.y - mouse.y);
 
         angle = Mathf.Clamp((Mathf.Atan2(y, x) * Mathf.Rad2Deg), minRotation, maxRotation);
-        //bodyTransform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        bodyTransform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }
