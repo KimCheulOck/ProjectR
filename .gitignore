@@ -77,3 +77,7 @@ storage.ide
 storage.ide-shm
 
 storage.ide-wal
+
+manifest.json
+
+packages-lock.json
