@@ -9,7 +9,7 @@
     public int avoid = 10;
     public int critical = 1;
     public float atkSpeed = 1.0f;
-    public float moveSpeed = 1.0f;
+    public float moveSpeed = 10.0f;
     public float spellSpeed = 1.0f;
     public int elemental = 2;
 

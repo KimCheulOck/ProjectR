@@ -13,7 +13,7 @@ public class Action
         {
             // 해당 엑터가 내꺼인지 아닌지에 따라
             // 1. 내꺼, 2. 몬스터 or NPC, 3. 타 유저
-            return Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            return CameraController.MainCamera.ScreenToWorldPoint(Input.mousePosition); 
             //return (Vector2)extraData[0];
         }
     }

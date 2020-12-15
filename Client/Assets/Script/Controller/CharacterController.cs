@@ -14,6 +14,8 @@ public class CharacterController : MonoBehaviour
         character.FlagIsMyActor(player.IsMy);
         character.ChangeStatus(new Status());
         character.ChangeEquip(null);
+
+        CameraController.MainCameraMoveTarget(character.transform);
     }
 
     public void CommandRegistration()
