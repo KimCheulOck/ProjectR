@@ -3,15 +3,18 @@
 public class BaseView : MonoBehaviour
 {
     private ViewFocusUnit viewFocusUnit = null;
+    private ViewMoveUnit viewMoveUnit = null;
     protected UIPrefabs uiPrefabs = UIPrefabs.None;
 
     public void SetViewFocusUnit(UIPrefabs uiPrefabs)
     {
         this.uiPrefabs = uiPrefabs;
 
-        ViewFocusUnit loadPrefabs = Resources.Load<ViewFocusUnit>("Prefabs/Unit/ViewFocusUnit");
-        viewFocusUnit = Instantiate(loadPrefabs, transform);
-        viewFocusUnit.SetSizeOfType(uiPrefabs, GetHashCode());
+        viewMoveUnit = GetComponentInChildren<ViewMoveUnit>();
+        viewMoveUnit.SetMoveUnit(uiPrefabs);
+
+        viewFocusUnit = GetComponentInChildren<ViewFocusUnit>();
+        viewFocusUnit.SetHashCode(GetHashCode());
     }
 
     public void ActiveFocusMask()

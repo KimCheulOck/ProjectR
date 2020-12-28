@@ -9,11 +9,8 @@ public class ItemSlotUnit : DragAndDropUnit
     private Text txtCount = null;
     [SerializeField]
     private Button btnItem = null;
-    [SerializeField]
-    private CanvasGroup canvasGroup = null;
 
     private IItem item;
-    private GameObject clone = null;
 
     public void SetItem(IItem item)
     {

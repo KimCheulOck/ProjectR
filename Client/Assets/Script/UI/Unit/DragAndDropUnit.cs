@@ -17,7 +17,7 @@ public class DragAndDropUnit : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (clone == null)
             clone = Instantiate(gameObject, InstanceController.Instance.transform);
 
-        canvasGroup.alpha = 0.5f;
+        CanvasAlpha(0.5f);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -30,13 +30,21 @@ public class DragAndDropUnit : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         // 드래그 끝 (포커스 영역 밖)
         Debug.Log("OnEndDrag");
-        canvasGroup.alpha = 1;
-        Destroy(clone);        
+        CanvasAlpha(1);
+        Destroy(clone);
     }
 
     public void OnDrop(PointerEventData eventData)
     {
         // 드래그 끝
         Debug.Log("OnDrop");
+    }
+
+    private void CanvasAlpha(float alpha)
+    {
+        if (canvasGroup == null)
+            return;
+
+        canvasGroup.alpha = alpha;
     }
 }
