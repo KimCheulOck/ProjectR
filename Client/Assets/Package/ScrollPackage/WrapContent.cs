@@ -72,8 +72,7 @@ public class WrapContent : MonoBehaviour
     [ContextMenu("테스트")]
     public void TestSetting()
     {
-        SetChildItem();
-        SetItemCount(itemCount);
+        SetChildItem(itemCount);
         SetUpdateEvent(null);
         ResetPosition();
     }
@@ -96,23 +95,6 @@ public class WrapContent : MonoBehaviour
         }
     }
     
-    public void SetItemCount(int count)
-    {
-        itemCount = count;
-        reSizeRecodeList = new float[itemCount];
-
-        rectTransform = GetComponent<RectTransform>();
-        SetAnchorPivot();
-
-        Vector2 delta = rectTransform.sizeDelta;
-        float itemSizeValue = (itemSize * itemCount);
-        delta.x = movement == Movement.Horizontal ? itemSizeValue : delta.x;
-        delta.y = movement == Movement.Vertical ? itemSizeValue : delta.y;
-
-        rectTransform.sizeDelta = delta;
-        //rectTransform.anchoredPosition = new Vector2(delta.x, delta.y);
-    }
-
     public void SetUpdateEvent(OnUpdateItem updateEvent)
     {
         onUpdateItem = updateEvent;
@@ -194,7 +176,7 @@ public class WrapContent : MonoBehaviour
         }
     }
 
-    public void SetChildItem()
+    public void SetChildItem(int count)
     {
         childIndex = new int[transform.childCount];
         childObject = new RectTransform[childIndex.Length];
@@ -207,8 +189,24 @@ public class WrapContent : MonoBehaviour
 
         //reSizeRecodeList.Clear();
         //reSizeRecode.Clear();
+        SetItemCount(count);
     }
 
+    private void SetItemCount(int count)
+    {
+        itemCount = count;
+        reSizeRecodeList = new float[itemCount];
+
+        rectTransform = GetComponent<RectTransform>();
+        SetAnchorPivot();
+
+        Vector2 delta = rectTransform.sizeDelta;
+        float itemSizeValue = (itemSize * itemCount);
+        delta.x = movement == Movement.Horizontal ? itemSizeValue : delta.x;
+        delta.y = movement == Movement.Vertical ? itemSizeValue : delta.y;
+
+        rectTransform.sizeDelta = delta;
+    }
     private void Update()
     {
         if (update && transform.localPosition == previuesPosition)

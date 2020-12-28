@@ -2,7 +2,17 @@
 
 public class Character : Actor
 {
+    [SerializeField]
+    private Transform bodyTransform;
+    [SerializeField]
+    private Transform characterTransform;
+
     public bool IsMy { get; private set; }
+
+    private float angle;
+    private Vector2 mouse;
+    private Vector3 leftVector = Vector3.one;
+    private Vector3 rightVector = new Vector3(-1, 1, 1);
 
     public void Awake()
     {
@@ -12,8 +22,6 @@ public class Character : Actor
         ChangeState(BodyType.Up, StateType.Idle);
         ChangeState(BodyType.Low, StateType.Idle);
 
-        tag = "Player";
-
         RotationModel(bodyTransform, transform);
     }
 
@@ -22,31 +30,13 @@ public class Character : Actor
         IsMy = isMy;
     }
 
-    private void Update()
-    {
-        SetCharacterBodyRotaion();
-
-        stateMachine.Update();
-    }
-
-
-    [SerializeField]
-    private Transform bodyTransform;
-    [SerializeField]
-    private Transform characterTransform;
-
-    private float angle;
-    private Vector2 mouse;
-    private Vector3 leftVector = Vector3.one;
-    private Vector3 rightVector = new Vector3(-1, 1, 1); 
-
-    public void RotationModel(Transform bodyTransform, Transform characterTransform)
+    private void RotationModel(Transform bodyTransform, Transform characterTransform)
     {
         this.bodyTransform = bodyTransform;
         this.characterTransform = characterTransform;
     }
 
-    public void SetCharacterBodyRotaion()
+    private void SetCharacterBodyRotaion()
     {
         mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -64,5 +54,18 @@ public class Character : Actor
 
         angle = Mathf.Clamp((Mathf.Atan2(y, x) * Mathf.Rad2Deg), minRotation, maxRotation);
         bodyTransform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+
+    private void Update()
+    {
+        if (!IsMy)
+            return;
+
+        if (UIController.IsOpenUI())
+            return;
+
+        SetCharacterBodyRotaion();
+
+        stateMachine.Update();
     }
 }

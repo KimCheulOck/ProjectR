@@ -10,7 +10,7 @@ public class Monster : Actor
         ChangeState(BodyType.Up, StateType.Idle);
         ChangeState(BodyType.Low, StateType.Idle);
 
-        tag = "Enemey";
+        SetTag("Enemey");
     }
 
     private void Update()

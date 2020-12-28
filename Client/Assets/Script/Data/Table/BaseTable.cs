@@ -7,7 +7,7 @@ public class BaseTable<T, TT> : Singleton<T> where T : class where TT : BaseTabl
 
     public void LoadTable()
     {
-        string path = string.Format("Prefabs/Table/{0}", Instance.GetType().Name);
+        string path = string.Format("Data/Table/{0}", Instance.GetType().Name);
         object[] tableDataList = Resources.LoadAll(path);
 
         Datas.Clear();
