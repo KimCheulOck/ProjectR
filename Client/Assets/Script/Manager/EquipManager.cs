@@ -25,30 +25,10 @@ public class EquipManager : Singleton<EquipManager>
 
     public Equip CreateEquip(EquipTableData equipTableData, bool isWear)
     {
-        Equip equip = new Equip(equipTableData.equipType, equipTableData.status, isWear, equipTableData.path);
+        Equip equip = new Equip(equipTableData.status, equipTableData.equipType, equipTableData.weaponType, isWear, equipTableData.path);
         return equip;
     }
-
-    public void TestSetWearEquip()
-    {
-        Equip body = CreateEquip(EquipTable.Instance.FindToIndex(10000), true);
-        Equip Hand = CreateEquip(EquipTable.Instance.FindToIndex(11000), true);
-        Equip Head = CreateEquip(EquipTable.Instance.FindToIndex(12000), true);
-        Equip Leg = CreateEquip(EquipTable.Instance.FindToIndex(13000), true);
-
-        Equip rightHand = CreateEquip(EquipTable.Instance.FindToIndex(20000), true);
-        rightHand.SetCount(5);
-        Equip leftHand = CreateEquip(EquipTable.Instance.FindToIndex(22000), true);
-
-        InventoryManager.Instance.AddInventory(ItemType.Equip, body);
-        InventoryManager.Instance.AddInventory(ItemType.Equip, Hand);
-        InventoryManager.Instance.AddInventory(ItemType.Equip, Head);
-        InventoryManager.Instance.AddInventory(ItemType.Equip, Leg);
-
-        InventoryManager.Instance.AddInventory(ItemType.Equip, rightHand);
-        InventoryManager.Instance.AddInventory(ItemType.Equip, leftHand);
-    }
-
+    
     public IItem[] GetEquipList(EquipCategory equipCategory)
     {
         switch (equipCategory)
@@ -73,5 +53,48 @@ public class EquipManager : Singleton<EquipManager>
                     return null;
                 }
         }
+    }
+
+
+
+
+    public void TestSetWearEquip()
+    {
+        Equip body = CreateEquip(EquipTable.Instance.FindToIndex(10000), true);
+        Equip Hand = CreateEquip(EquipTable.Instance.FindToIndex(11000), true);
+        Equip Head = CreateEquip(EquipTable.Instance.FindToIndex(12000), true);
+        Equip Leg = CreateEquip(EquipTable.Instance.FindToIndex(13000), true);
+
+        Equip rightHand = CreateEquip(EquipTable.Instance.FindToIndex(20000), true);
+        rightHand.SetCount(5);
+        Equip leftHand = CreateEquip(EquipTable.Instance.FindToIndex(22000), true);
+
+        InventoryManager.Instance.AddInventory(ItemType.Equip, body);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Hand);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Head);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Leg);
+
+        InventoryManager.Instance.AddInventory(ItemType.Equip, rightHand);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, leftHand);
+    }
+
+    public void TestSetEquip()
+    {
+        Equip body = CreateEquip(EquipTable.Instance.FindToIndex(10000), false);
+        Equip Hand = CreateEquip(EquipTable.Instance.FindToIndex(11000), false);
+        Equip Head = CreateEquip(EquipTable.Instance.FindToIndex(12000), false);
+        Equip Leg = CreateEquip(EquipTable.Instance.FindToIndex(13000), false);
+
+        Equip rightHand = CreateEquip(EquipTable.Instance.FindToIndex(20000), false);
+        rightHand.SetCount(5);
+        Equip leftHand = CreateEquip(EquipTable.Instance.FindToIndex(22000), false);
+
+        InventoryManager.Instance.AddInventory(ItemType.Equip, body);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Hand);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Head);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, Leg);
+
+        InventoryManager.Instance.AddInventory(ItemType.Equip, rightHand);
+        InventoryManager.Instance.AddInventory(ItemType.Equip, leftHand);
     }
 }

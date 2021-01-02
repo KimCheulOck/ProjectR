@@ -1,35 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField]
     private Character character = null;
-
     private Command command = null;
 
-    public void SetCharacter(bool isMy)
+    public void CreateCharacter(ActorInfo actorInfo)
     {
-        character.FlagIsMyActor(isMy);
-        character.SetTag("Player");
-
+        Character loadCharacter = Resources.Load<Character>(actorInfo.Path);
+        character = Instantiate(loadCharacter, transform);
+        character.SetActorInfo(actorInfo);
+        character.Initialize();
         CameraController.MainCameraMoveTarget(character.transform);
     }
 
-    public void SetStatus(Status status)
+    public void ChangeEquip(Equip equip, bool isWear)
     {
-        character.ChangeStatus(status);
-    }
-
-    public void SetEquips(Equip[] equips)
-    {
-        character.ChangeEquip(equips);
-    }
-
-    public void SetSkills(Skill[] skills)
-    {
-        character.ChangeSkills(skills);
+        character.ChangeEquip(equip, isWear);
     }
 
     public void CommandRegistration()

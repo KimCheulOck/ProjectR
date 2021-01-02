@@ -9,8 +9,6 @@ public class Sword : Weapon
     [SerializeField]
     private TrailRenderer trailRenderer = null;
 
-    public override WeaponType WeaponType => WeaponType.Sword;
-
     public override void Initialize(Actor actor)
     {
         base.Initialize(actor);

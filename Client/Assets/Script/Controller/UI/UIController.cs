@@ -9,7 +9,7 @@ public class UIController : MonoSingleton<UIController>
 
     private List<UINavigator> navigator = new List<UINavigator>();
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 

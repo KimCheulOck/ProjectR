@@ -28,5 +28,6 @@ MonoBehaviour:
     spellSpeed: 0
     elemental: 0
   equipType: 0
+  weaponType: 2
   path:
   - Prefabs/Equip/Weapon/Bow/Bow

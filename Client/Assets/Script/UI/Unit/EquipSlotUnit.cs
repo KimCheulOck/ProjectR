@@ -25,6 +25,7 @@ public class EquipSlotUnit : MonoBehaviour
 
         objActive.SafeSetActive(true);
         itemSlotUnit.SetItem(equip);
+        itemSlotUnit.SetSlotType(ItemSlotUnit.SlotType.Equip);
         itemSlotUnit.Show();
     }
 

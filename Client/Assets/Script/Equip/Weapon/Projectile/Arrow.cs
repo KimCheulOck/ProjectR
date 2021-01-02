@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : MonoBehaviour
+public class Arrow : Weapon
 {
     // 발사 타입 - 마우스로 클릭한 곳까지 (무기의 사정거리까지가 최대거리)
     // 1. 직선
     // 2. 포물선을 그리면서 
+    [SerializeField]
+    private GameObject objShowGroup = null;
+
     private string actorTag;
     private Status status;
     private float speed;
     private float range;
+    private float startDelay;
+    private float angle;
+    private Transform arrowParent;
     private Vector2 startLocation;
     private Vector2 targetLocation;
 
@@ -19,21 +25,45 @@ public class Arrow : MonoBehaviour
         Cancel();
     }
 
-    public void Shoot(string actorTag, Status status, float speed, float range, Vector3 clickPosition)
+    public void SetActorData(string actorTag, Status status)
     {
         this.actorTag = actorTag;
         this.status = status;
+    }
+
+    public void SetShootData(float speed, float range, float startDelay, float angle, Transform arrowParent, Vector3 targetLocation)
+    {
         this.speed = speed;
         this.range = range;
-        startLocation = transform.position;
-        targetLocation = clickPosition;
+        this.startDelay = startDelay;
+        this.angle = angle;
+        this.arrowParent = arrowParent;
+        this.targetLocation = targetLocation;
+    }
 
-        StartCoroutine(Action());
+    public void Shoot()
+    {
+        Cancel();
+        actionCoroutine = StartCoroutine(Action());
+    }
+
+    public void Show()
+    {
+        objShowGroup.SafeSetActive(true);
     }
 
     private IEnumerator Action()
     {
+        yield return new WaitForSeconds(startDelay);
+
         WaitForSeconds time = new WaitForSeconds(0.1f);
+
+        objShowGroup.SafeSetActive(true);
+        transform.position = arrowParent.position;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.localScale = arrowParent.localScale;
+
+        startLocation = transform.position;
 
         while (true)
         {
@@ -43,15 +73,13 @@ public class Arrow : MonoBehaviour
             if ((isLeft && range <= rangeMax) || (!isLeft && range <= rangeMax))
             {
                 // 최대거리에 도달
-                Debug.Log("최대거리 도착");
-                this.SafeSetActive(false);
+                objShowGroup.SafeSetActive(false);
                 break;
             }
 
             if (distance < speed)
             {
-                Debug.Log("목표거리 도착");
-                this.SafeSetActive(false);
+                objShowGroup.SafeSetActive(false);
                 break;
             }
 
@@ -61,10 +89,12 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    private void Cancel()
+    public override void Cancel()
     {
-        StopCoroutine(Action());
-        this.SafeSetActive(false);
+        if (actionCoroutine != null)
+            StopCoroutine(actionCoroutine);
+
+        objShowGroup.SafeSetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

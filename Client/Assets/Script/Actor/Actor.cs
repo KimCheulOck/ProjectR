@@ -6,54 +6,67 @@ public class Actor : MonoBehaviour
     protected EquipController equipController = null;
 
     public Animator basicBody = null;
+    public string ActorTag { get { return actorInfo.Tag; } }
 
-    public Status Status { get; private set; }
-    public Equip[] Equips { get; private set; }
-    public Skill[] Skills { get; private set; }
+    public Status Status { get { return actorInfo.Status; } }
+    public Equip[] Equips {get { return actorInfo.Equips; } }
+    public Skill[] Skills { get { return actorInfo.Skills; } }
+    public Costume[] Costume { get { return actorInfo.Costume; } }
+    public Costume[] DefaultCostume { get { return actorInfo.DefaultCostume; } }
 
     protected StateMachine stateMachine = null;
     protected ActionMachine actionMachine = null;
-    public string ActorTag { get; protected set; }
+    protected ActorInfo actorInfo;
 
-    public void SetTag(string tag)
+    public void SetActorInfo(ActorInfo actorInfo)
     {
-        ActorTag = tag;
+        this.actorInfo = actorInfo;
     }
 
     public void ChangeState(BodyType bodyType, StateType stateType, params object[] extraData)
     {
         if (!stateMachine.PossibleChangeState(bodyType, stateType, extraData))
-            return;
-
-        actionMachine.ChangeAction(bodyType, stateType);
-
-        Action action = actionMachine.GetAction(bodyType);
-        stateMachine.ChangeState(bodyType, stateType, action, extraData);
-
-        if (bodyType == BodyType.Up)
         {
-            equipController.UseWeapon(EquipType.RightWeapon, stateType, action);
-            equipController.UseWeapon(EquipType.LeftWeapon, stateType, action);
+            Action action = actionMachine.GetAction(bodyType);
+            UseWeapon(bodyType, stateType, action);
+            return;
         }
+
+        actionMachine.ChangeAction(bodyType, stateType, Equips);
+
+        Action changeAction = actionMachine.GetAction(bodyType);
+        stateMachine.ChangeState(bodyType, stateType, changeAction, extraData);
+
+        UseWeapon(bodyType, stateType, changeAction);
     }
 
     public void ChangeStatus(Status stats)
     {
-        Status = stats;
+        actorInfo.Status = stats;
     }
 
-    public void ChangeEquip(Equip[] equips)
+    public void ChangeEquip(Equip equip, bool isWear)
     {
-        Equips = equips;
+        if (actorInfo.Equips[(int)equip.equipType] != null)
+        {
+            actorInfo.Equips[(int)equip.equipType].isWear = false;
+            actorInfo.Equips[(int)equip.equipType] = null;
+        }
 
+        actorInfo.Equips[(int)equip.equipType] = equip;
+        actorInfo.Equips[(int)equip.equipType].isWear = isWear;
+        RefreshEquips();
+    }
+
+    public void RefreshEquips()
+    {
         equipController.SetActor(this);
-        equipController.SetEquip(Equips);
-        equipController.SetEquipParts();
+        equipController.SetParts();
     }
 
     public void ChangeSkills(Skill[] skills)
     {
-        Skills = skills;
+        actorInfo.Skills = skills;
     }
 
     public bool WaitingNextState(BodyType bodyType)
@@ -79,5 +92,14 @@ public class Actor : MonoBehaviour
         }
 
         Debug.Log("damage : " + damage + ", hp : " + Status.hp);
+    }
+
+    private void UseWeapon(BodyType bodyType, StateType stateType, Action action)
+    {
+        if (bodyType == BodyType.Up)
+        {
+            equipController.UseWeapon(EquipType.RightWeapon, stateType, action);
+            equipController.UseWeapon(EquipType.LeftWeapon, stateType, action);
+        }
     }
 }

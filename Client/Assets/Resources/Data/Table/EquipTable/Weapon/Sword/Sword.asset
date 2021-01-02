@@ -28,5 +28,6 @@ MonoBehaviour:
     spellSpeed: 0
     elemental: 0
   equipType: 0
+  weaponType: 8
   path:
   - Prefabs/Equip/Weapon/Sword/Sword

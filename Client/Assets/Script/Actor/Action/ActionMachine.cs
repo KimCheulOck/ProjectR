@@ -21,7 +21,7 @@ public class ActionMachine
         }
     }
 
-    public void ChangeAction(BodyType bodyType, StateType stateType)
+    public void ChangeAction(BodyType bodyType, StateType stateType, Equip[] Equips)
     {
         int bodyIndex = (int)bodyType;
 
@@ -34,8 +34,7 @@ public class ActionMachine
                 }
             case StateType.Attack:
                 {
-                    actionTypes[bodyIndex] = ActionType.Bow;
-
+                    AttackAction(bodyIndex, Equips[(int)EquipType.LeftWeapon]);
                     break;
                 }
             case StateType.Idle:
@@ -52,4 +51,27 @@ public class ActionMachine
         return actions[bodyIndex, (int)actionTypes[bodyIndex]];
     }
 
+    private void AttackAction(int bodyIndex, Equip equip)
+    {
+        if (equip == null)
+        {
+            actionTypes[bodyIndex] = ActionType.Slash;
+            return;
+        }
+
+        switch (equip.weaponType)
+        {
+            case WeaponType.Bow:
+                {
+                    actionTypes[bodyIndex] = ActionType.Bow;
+                }
+                break;
+
+            case WeaponType.Sword:
+                {
+                    actionTypes[bodyIndex] = ActionType.Slash;
+                }
+                break;
+        }
+    }
 }

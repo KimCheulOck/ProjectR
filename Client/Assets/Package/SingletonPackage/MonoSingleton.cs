@@ -5,7 +5,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     protected static T instance = null;
     public static T Instance { get { return instance; } }
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         if (instance != null)
             Destroy(instance.gameObject);

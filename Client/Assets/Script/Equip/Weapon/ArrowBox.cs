@@ -7,8 +7,6 @@ public class ArrowBox : Weapon
     [SerializeField]
     private Transform arrowParent = null;
 
-    public override WeaponType WeaponType => WeaponType.Projectile;
-
     private const int ARROWS_MAX = 10;
     private Arrow arrow;
 
@@ -21,11 +19,14 @@ public class ArrowBox : Weapon
     public override void Use(Action action)
     {
         base.Use(action);
+        Cancel();
         actionCoroutine = StartCoroutine(Action());
     }
 
     public override void Cancel()
     {
+        Debug.Log("Cancel");
+
         if(actionCoroutine != null)
             StopCoroutine(actionCoroutine);
 
@@ -60,6 +61,7 @@ public class ArrowBox : Weapon
             }
 
             arrow.SafeSetActive(true);
+            arrow.Show();
             loop++;
             count--;
 

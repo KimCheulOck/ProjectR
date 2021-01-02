@@ -8,8 +8,6 @@ public class Bow : Weapon
     private Transform arrowParent = null;
     private List<Arrow> arrows = new List<Arrow>();
 
-    public override WeaponType WeaponType { get { return WeaponType.Bow; } }
-
     private const int ARROWS_MAX = 10;
 
     public override void Initialize(Actor actor)
@@ -71,22 +69,20 @@ public class Bow : Weapon
                 if (arrow == null)
                     continue;
 
-                arrow.SafeSetActive(false);
+                //arrow.SafeSetActive(false);
                 arrowIndex = arrows.Count;
                 arrows.Add(arrow);
             }
-
-            yield return new WaitForSeconds(1.0f);
 
             Vector3 clickPosition = action.ClickLocation;
             Vector2 dir = clickPosition - actor.transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            arrows[arrowIndex].SafeSetActive(true);
-            arrows[arrowIndex].transform.position = arrowParent.position;
-            arrows[arrowIndex].transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            arrows[arrowIndex].transform.localScale = arrowParent.localScale;
-            arrows[arrowIndex].Shoot(actor.ActorTag, actor.Status, 1.0f, range, clickPosition);
+            arrows[arrowIndex].SetActorData(actor.ActorTag, actor.Status);
+            arrows[arrowIndex].SetShootData( 1.0f, range, 1.0f, angle, arrowParent, clickPosition);
+            arrows[arrowIndex].Shoot();
+
+            yield return new WaitForSeconds(1.0f);
         }
     }
 }

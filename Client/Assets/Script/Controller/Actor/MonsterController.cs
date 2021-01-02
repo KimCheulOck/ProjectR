@@ -14,27 +14,9 @@ public class MonsterController : MonoBehaviour
 
     public void SetMonster()
     {
-        monster.ChangeStatus(new Status());
-        monster.ChangeEquip(null);
+        //monster.ChangeStatus(new Status());
+        //monster.ChangeEquip(null);
     }
 
     #endregion
-
-
-
-
-    [SerializeField]
-    private float radius = 1;
-
-    [SerializeField]
-    private GameObject testObject1 = null;
-    [SerializeField]
-    private GameObject testObject2 = null;
-
-    [ContextMenu("Test")]
-    public void Test()
-    {
-        Debug.Log("1 : " + Vector3.Distance(testObject1.transform.position, testObject2.transform.position));
-        Debug.Log("2 : " + Vector2.Distance(testObject1.transform.position, testObject2.transform.position));
-    }
 }

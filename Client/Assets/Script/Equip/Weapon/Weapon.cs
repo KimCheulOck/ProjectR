@@ -5,7 +5,6 @@ using UnityEngine;
 public class Weapon : EquipParts
 {
     public GameObject subWeapon = null;
-    public virtual WeaponType WeaponType { get { return WeaponType.Axe; } }
 
     protected Actor actor;
     protected Action action;

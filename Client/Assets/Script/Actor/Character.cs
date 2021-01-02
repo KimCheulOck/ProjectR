@@ -7,14 +7,14 @@ public class Character : Actor
     [SerializeField]
     private Transform characterTransform;
 
-    public bool IsMy { get; private set; }
+    public bool IsMy { get { return actorInfo.IsMy; } }
 
     private float angle;
     private Vector2 mouse;
     private Vector3 leftVector = Vector3.one;
     private Vector3 rightVector = new Vector3(-1, 1, 1);
 
-    public void Awake()
+    public void Initialize()
     {
         stateMachine = new StateMachine(this);
         actionMachine = new ActionMachine(this);
@@ -23,11 +23,8 @@ public class Character : Actor
         ChangeState(BodyType.Low, StateType.Idle);
 
         RotationModel(bodyTransform, transform);
-    }
 
-    public void FlagIsMyActor(bool isMy)
-    {
-        IsMy = isMy;
+        RefreshEquips();
     }
 
     private void RotationModel(Transform bodyTransform, Transform characterTransform)

@@ -1,27 +1,61 @@
 ﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IObserver
 {
     [SerializeField]
     private CharacterController characterController = null;
 
     private Player player = null;
 
-    /// <summary>
-    /// 테스트용
-    /// </summary>
-    public void Start()
+    void IObserver.RefrashObserver(ObserverMessage id, object[] message)
     {
-        Player player = new Player();
-        player.playerName = "다람쥐";
-        player.createTime = 0;
-        player.dbIndex = 0;
-        player.isMy = true;
-        player.status = new Status();
+        switch (id)
+        {
+            case ObserverMessage.ChangeCostume:
+                {
+                }
+                break;
 
-        SetPlayer(player);
+            case ObserverMessage.ChangeEquip:
+                {
+                    characterController.ChangeEquip(message[0] as Equip, isWear: true);
+                }
+                break;
 
-        CreateMyCharacter();
+            case ObserverMessage.UnWearEquip:
+                {
+                    characterController.ChangeEquip(message[0] as Equip, isWear: false);
+                }
+                break;
+
+            case ObserverMessage.UseItem:
+                {
+                }
+                break;
+        }
+    }
+
+    private void Awake()
+    {
+        AdddObserver();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveObserver();
+    }
+
+    private void AdddObserver()
+    {
+        ObserverHandler.Instance.AddObserver(ObserverMessage.ChangeCostume, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.ChangeEquip, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.UnWearEquip, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.UseItem, this);
+    }
+
+    private void RemoveObserver()
+    {
+        ObserverHandler.Instance.RemoveObserver(this);
     }
 
     public void SetPlayer(Player player)
@@ -31,10 +65,10 @@ public class PlayerController : MonoBehaviour
 
     public void CreateMyCharacter()
     {
-        characterController.SetCharacter(player.isMy);
-        characterController.SetStatus(player.status);
-        characterController.SetEquips(EquipManager.Instance.GetWearEquips());
-        characterController.SetSkills(null);
+        GameObject characterObject = new GameObject("characterController");
+        characterController = characterObject.AddComponent<CharacterController>();
+        characterController.transform.SetParent(transform);
+        characterController.CreateCharacter(player.ActorInfo);
         characterController.CommandRegistration();
     }
 }

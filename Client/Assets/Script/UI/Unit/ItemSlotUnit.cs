@@ -7,14 +7,25 @@ public class ItemSlotUnit : DragAndDropUnit
     private Image imgItem = null;
     [SerializeField]
     private Text txtCount = null;
-    [SerializeField]
-    private Button btnItem = null;
+
+    public enum SlotType
+    {
+        None = 0,
+        Inventory,
+        Equip,
+    }
 
     private IItem item;
+    private SlotType slotType = SlotType.None;
 
     public void SetItem(IItem item)
     {
         this.item = item;
+    }
+
+    public void SetSlotType(SlotType slotType)
+    {
+        this.slotType = slotType;
     }
 
     public void SetButton()
@@ -47,5 +58,45 @@ public class ItemSlotUnit : DragAndDropUnit
     public void OnMouseExit()
     {
         Debug.Log("OnMouseExit");
+    }
+
+    public void OnMouseClick()
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (slotType == SlotType.Inventory)
+            {
+                // 아이템 장착 or 교체
+                switch (item.ItemType)
+                {
+                    case ItemType.Equip:
+                        {
+                            Equip equip = item as Equip;
+                            if (equip.isWear)
+                                return;
+
+                            ObserverHandler.Instance.NotifyObserver(ObserverMessage.ChangeEquip, item);
+                        }
+                        break;
+
+                    case ItemType.Potion:
+                        {
+                            ObserverHandler.Instance.NotifyObserver(ObserverMessage.UseItem, item);
+                        }
+                        break;
+
+                    case ItemType.Costume:
+                        {
+                            ObserverHandler.Instance.NotifyObserver(ObserverMessage.ChangeCostume, item);
+                        }
+                        break;
+                }
+            }
+            else if (slotType == SlotType.Equip)
+            {
+                // 장착 해제
+                ObserverHandler.Instance.NotifyObserver(ObserverMessage.UnWearEquip, item);
+            }
+        }
     }
 }

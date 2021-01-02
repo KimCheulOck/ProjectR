@@ -26,6 +26,7 @@ public class InventorySlotUnit : MonoBehaviour
         objActive.SafeSetActive(true);
 
         itemSlotUnit.SetItem(item);
+        itemSlotUnit.SetSlotType(ItemSlotUnit.SlotType.Inventory);
         itemSlotUnit.Show();
     }
 

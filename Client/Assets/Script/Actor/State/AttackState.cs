@@ -14,6 +14,12 @@ public class AttackState : State
     {
         if (actor == null)
             return;
+
+        if (WaitingNextState())
+            return;
+
+        action.Initialize(bodyType, extraData);
+        action.SetWatingTime(Time.time + 1.0f);
     }
 
     public override bool WaitingNextState()

@@ -3,18 +3,15 @@
 public enum ObserverMessage
 {
     None = 0,
-    UIRefresh,
-    GameReady,
-    GameStart,
-    GameResult,
-    ReplayGame,
 
-    NextStage,
-    CreateIngredients,
+    SetPlayer,
 
-    RefreshScore,
+    ChangeCostume,
+    ChangeEquip,
+    UnWearEquip,
+    
+    UseItem,
 
-    CheckGoogleLogin,
     Exit,
 }
 

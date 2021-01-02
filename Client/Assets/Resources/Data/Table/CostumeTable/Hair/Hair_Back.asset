@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2efb2b6f2fe9e0e47873c77b5dddfc70, type: 3}
+  m_Name: Hair_Back
+  m_EditorClassIdentifier: 
+  index: 30000
+  CostumeType: 4
+  Name: "\uAE30\uBCF8 \uBA38\uB9AC"
+  Path:
+  - Texture/Costume/Hair/Hair_Top_001
+  - Texture/Costume/Hair/Hair_Back_001

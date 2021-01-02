@@ -10,5 +10,6 @@ public class EquipTableData : BaseTableData
 
     public Status status;
     public EquipType equipType;
+    public WeaponType weaponType;
     public string[] path;
 }

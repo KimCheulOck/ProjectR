@@ -26,8 +26,21 @@ public class IntroFlow : BaseFlow
     {
     }
 
+    public override IEnumerator LoadingProcess()
+    {
+        LoadTable();
+        yield break;
+    }
+
+    public override void LoadingEnd()
+    {
+    }
+
     private void LoadTable()
     {
+        CharacterTable.Instance.LoadTable();
+        MonsterTable.Instance.LoadTable();
         EquipTable.Instance.LoadTable();
+        CostumeTable.Instance.LoadTable();
     }
 }

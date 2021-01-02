@@ -7,21 +7,23 @@ public class Equip : IItem
     public ItemType ItemType { get { return ItemType.Equip; } }
     public int Count { get; private set; }
 
-    public EquipType equipType;
     public Status status;
+    public EquipType equipType;
+    public WeaponType weaponType;
     public bool isWear;
-    public string[] path;
+    public string[] Path;
 
-    public Equip(EquipType equipType, Status status, bool isWear, string[] path)
+    public Equip(Status status, EquipType equipType, WeaponType weaponType, bool isWear, string[] path)
     {
-        this.equipType = equipType;
         this.status = status;
+        this.equipType = equipType;
+        this.weaponType = weaponType;
         this.isWear = isWear;
-        this.path = path;
+        this.Path = path;
     }
 
     public void SetCount(int count)
     {
-        this.Count = count;
+        Count = count;
     }
 }

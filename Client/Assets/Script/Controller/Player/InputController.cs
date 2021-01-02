@@ -52,7 +52,7 @@ public class InputController : MonoBehaviour
         if (onKeyEventWaiting(BodyType.Up))
             return;
 
-        onKeyEventAttack(BodyType.Up, StateType.Idle);
+        //onKeyEventAttack(BodyType.Up, StateType.Idle);
 
         if (Input.GetMouseButton(MOUSELEFT))
         {

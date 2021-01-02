@@ -6,6 +6,7 @@ public class FlowManager : MonoSingleton<FlowManager>
 {
     private BaseFlow prevFlow;
     private BaseFlow currentFlow;
+    private Coroutine loadingProcess;
 
     public void ChangeFlow(BaseFlow flow)
     {
@@ -16,6 +17,17 @@ public class FlowManager : MonoSingleton<FlowManager>
         currentFlow = flow;
 
         currentFlow.Enter();
+
+        if(loadingProcess != null)
+            StopCoroutine(loadingProcess);
+        loadingProcess = StartCoroutine(LoadingProcess());
+    }
+
+    private IEnumerator LoadingProcess()
+    {
+        yield return currentFlow.LoadingProcess();
+
+        currentFlow.LoadingEnd();
     }
 
     private void Update()

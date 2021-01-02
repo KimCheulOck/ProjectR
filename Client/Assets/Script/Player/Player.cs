@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Player
 {
-    public string playerName;
     public long createTime;
     public long dbIndex;
-    public bool isMy;
 
-    public Status status;
+    public ActorInfo ActorInfo;
 }

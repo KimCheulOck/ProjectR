@@ -23,4 +23,13 @@ public class LoginFlow : BaseFlow
     public override void Update()
     {
     }
+
+    public override IEnumerator LoadingProcess()
+    {
+        yield break;
+    }
+
+    public override void LoadingEnd()
+    {
+    }
 }
