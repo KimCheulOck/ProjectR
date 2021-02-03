@@ -10,12 +10,6 @@ public class Bow : Weapon
 
     private const int ARROWS_MAX = 10;
 
-    public override void Initialize(Actor actor)
-    {
-        base.Initialize(actor);
-        Cancel();
-    }
-
     public override void Use(Action action)
     {
         base.Use(action);
@@ -69,16 +63,15 @@ public class Bow : Weapon
                 if (arrow == null)
                     continue;
 
-                //arrow.SafeSetActive(false);
                 arrowIndex = arrows.Count;
+                arrow.SetEvent(onEventHit, onEventActorPosition, onEventUseProjectile);
                 arrows.Add(arrow);
             }
 
             Vector3 clickPosition = action.ClickLocation;
-            Vector2 dir = clickPosition - actor.transform.position;
+            Vector2 dir = clickPosition - onEventActorPosition();
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            arrows[arrowIndex].SetActorData(actor.ActorTag, actor.Status);
             arrows[arrowIndex].SetShootData( 1.0f, range, 1.0f, angle, arrowParent, clickPosition);
             arrows[arrowIndex].Shoot();
 

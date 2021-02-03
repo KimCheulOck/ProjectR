@@ -24,6 +24,11 @@ public abstract class BasePresenter
     {
     }
 
+    public virtual void RefreshUI()
+    {
+
+    }
+
     public abstract UIPrefabs GetUIPrefabs();
 
     public T CreateView<T>() where T : BaseView

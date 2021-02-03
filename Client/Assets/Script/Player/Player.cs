@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player
 {
     public long createTime;
-    public long dbIndex;
+    public string pid;
 
-    public ActorInfo ActorInfo;
+    public ActorInfo SelectActorInfo;
+    public ActorInfo[] AllActorInfos;
 }

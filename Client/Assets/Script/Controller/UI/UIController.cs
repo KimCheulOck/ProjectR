@@ -20,6 +20,10 @@ public class UIController : MonoSingleton<UIController>
     {
         Instance.StartCoroutine(Instance.EnterProcessing(presenter));
     }
+    public static IEnumerator EnterAsync(BasePresenter presenter)
+    {
+        yield return Instance.EnterProcessing(presenter);
+    }
 
     private IEnumerator EnterProcessing(BasePresenter presenter)
     {
@@ -51,7 +55,7 @@ public class UIController : MonoSingleton<UIController>
         prefabs.transform.SetParent(Instance.uiParent);
         Instance.navigator.Add(new UINavigator(presenter, prefabs.gameObject));
 
-        Instance.SetFocusMask();
+        Instance.SetPriorityZPosition();
 
         return prefabs.GetComponent<T>();
     }
@@ -114,10 +118,12 @@ public class UIController : MonoSingleton<UIController>
             {
                 Destroy(Instance.navigator[i].Prefabs);
                 Instance.navigator.RemoveAt(i);
-                Instance.SetAllFocusMask();
+                //Instance.SetAllFocusMask();
                 break;
             }
         }
+
+        Instance.SetPriorityZPosition();
     }
 
     public static void FocusSort(BasePresenter presenter)
@@ -132,32 +138,50 @@ public class UIController : MonoSingleton<UIController>
                 UINavigator navigator = Instance.navigator[i];
                 Instance.navigator.RemoveAt(i);
                 Instance.navigator.Add(navigator);
-                Instance.SetAllFocusMask();
+                //Instance.SetAllFocusMask();
 
                 navigator.Prefabs.transform.SetAsLastSibling();
+                //navigator.Prefabs.SafeSetActive(false);
+                //navigator.Prefabs.SafeSetActive(true);
                 break;
             }
         }
+
+        Instance.SetPriorityZPosition();
     }
 
-    private void SetAllFocusMask()
+    private void SetPriorityZPosition()
     {
         for (int i = 0; i < navigator.Count; ++i)
-            navigator[i].BaseView.ActiveFocusMask();
+        {
+            if (navigator[i] == null)
+                continue;
 
-        int currentIndex = navigator.Count - 1;
-        if (currentIndex >= 0)
-            navigator[currentIndex].BaseView.DisableFocusMask();
+            Transform trans = navigator[i].Prefabs.transform;
+            float x = trans.localPosition.x;
+            float y = trans.localPosition.y;
+            trans.localPosition = new Vector3(x, y, -i);
+        }
     }
 
-    private void SetFocusMask()
-    {
-        int currentIndex = navigator.Count - 1;
-        int prevIndex = currentIndex - 1;
+    //private void SetAllFocusMask()
+    //{
+    //    for (int i = 0; i < navigator.Count; ++i)
+    //        navigator[i].BaseView.ActiveFocusMask();
 
-        if (prevIndex >= 0)
-            navigator[prevIndex].BaseView.ActiveFocusMask();
+    //    int currentIndex = navigator.Count - 1;
+    //    if (currentIndex >= 0)
+    //        navigator[currentIndex].BaseView.DisableFocusMask();
+    //}
 
-        navigator[currentIndex].BaseView.DisableFocusMask();
-    }
+    //private void SetFocusMask()
+    //{
+    //    int currentIndex = navigator.Count - 1;
+    //    int prevIndex = currentIndex - 1;
+
+    //    if (prevIndex >= 0)
+    //        navigator[prevIndex].BaseView.ActiveFocusMask();
+
+    //    navigator[currentIndex].BaseView.DisableFocusMask();
+    //}
 }

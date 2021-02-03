@@ -43,6 +43,19 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
+    public void RefreshInventory()
+    {
+        for (int i = 0; i < (int)ItemType.Max; ++i)
+        {
+            ItemType itemType = (ItemType)i;
+            if (!itemList.ContainsKey(itemType))
+                continue;
+
+            List<IItem> iItems = itemList[itemType];
+            iItems.RemoveAll(match => match.Count == 0);
+        }
+    }
+
     public List<IItem> GetInventoryList(InventoryCategory inventoryCategory)
     {
         switch (inventoryCategory)

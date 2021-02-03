@@ -7,6 +7,8 @@ public class ItemSlotUnit : DragAndDropUnit
     private Image imgItem = null;
     [SerializeField]
     private Text txtCount = null;
+    [SerializeField]
+    private GameObject objWearMark = null;
 
     public enum SlotType
     {
@@ -46,8 +48,10 @@ public class ItemSlotUnit : DragAndDropUnit
 
     public void Show()
     {
-        imgItem.SafeSetSprite("");
-        txtCount.SafeSetText(item.Count == 0 ? string.Empty : string.Format("x{0}", item.Count));
+        imgItem.SafeSetSprite(item.Thumbnail);
+
+        SetCount();
+        SetWearMark();
     }
 
     public void OnMouseOver()
@@ -72,10 +76,7 @@ public class ItemSlotUnit : DragAndDropUnit
                     case ItemType.Equip:
                         {
                             Equip equip = item as Equip;
-                            if (equip.isWear)
-                                return;
-
-                            ObserverHandler.Instance.NotifyObserver(ObserverMessage.ChangeEquip, item);
+                            ObserverHandler.Instance.NotifyObserver(ObserverMessage.ChangeEquip, item, !equip.IsWear);
                         }
                         break;
 
@@ -95,8 +96,37 @@ public class ItemSlotUnit : DragAndDropUnit
             else if (slotType == SlotType.Equip)
             {
                 // 장착 해제
-                ObserverHandler.Instance.NotifyObserver(ObserverMessage.UnWearEquip, item);
+                bool isWear = false;
+                ObserverHandler.Instance.NotifyObserver(ObserverMessage.ChangeEquip, item, isWear);
             }
         }
+    }
+
+    private void SetCount()
+    {
+        switch (item.ItemType)
+        {
+            case ItemType.Equip:
+            case ItemType.Costume:
+                {
+                    txtCount.SafeSetText(item.Count == 1 ? string.Empty : string.Format("x{0}", item.Count));
+                }
+                break;
+
+            default:
+                {
+                    txtCount.SafeSetText(item.Count == 0 ? string.Empty : string.Format("x{0}", item.Count));
+                }
+                break;
+        }
+    }
+
+    private void SetWearMark()
+    {
+        Equip equip = item as Equip;
+        if (equip == null)
+            objWearMark.SafeSetActive(false);
+        else
+            objWearMark.SafeSetActive(equip.IsWear);
     }
 }

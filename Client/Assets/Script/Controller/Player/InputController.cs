@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour
 {
@@ -14,57 +15,15 @@ public class InputController : MonoBehaviour
     private void Update()
     {
         OnKeyUI();
+        OnKeyMove();
 
         if (UIController.IsOpenUI())
-            return;
-
-        OnKeyMove();
-        OnKeyAttack();
-    }
-
-    private void OnKeyMove()
-    {
-        if (onKeyEventMove == null)
-            return;
-
-        DirectionType heightDirectionType = DirectionType.None;
-        DirectionType widthDirectionType = DirectionType.None;
-        if (Input.GetKey(KeyCode.W))
-            heightDirectionType = DirectionType.Up;
-        else if (Input.GetKey(KeyCode.S))
-            heightDirectionType = DirectionType.Down;
-        if (Input.GetKey(KeyCode.A))
-            widthDirectionType = DirectionType.Left;
-        else if (Input.GetKey(KeyCode.D))
-            widthDirectionType = DirectionType.Right;
-
-        if (heightDirectionType == DirectionType.None && widthDirectionType == DirectionType.None)
-            onKeyEventMove(BodyType.Low, StateType.Idle);
-        else
-            onKeyEventMove(BodyType.Low, StateType.Move, heightDirectionType, widthDirectionType);
-    }
-
-    private void OnKeyAttack()
-    {
-        if (onKeyEventAttack == null)
-            return;
-
-        if (onKeyEventWaiting(BodyType.Up))
-            return;
-
-        //onKeyEventAttack(BodyType.Up, StateType.Idle);
-
-        if (Input.GetMouseButton(MOUSELEFT))
         {
-            //Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            onKeyEventAttack(BodyType.Up, StateType.Attack);
-        }
-        else if (Input.GetMouseButton(MOUSERIGHT))
-        {
+            OnKeyUIFocus();
         }
         else
         {
-            onKeyEventAttack(BodyType.Up, StateType.Idle);
+            OnKeyAttack();
         }
     }
 
@@ -125,11 +84,101 @@ public class InputController : MonoBehaviour
         //}
     }
 
+    private void OnKeyUIFocus()
+    {
+        bool isMouseClick = false;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (Input.GetMouseButtonDown(i))
+            {
+                isMouseClick = true;
+                break;
+            }
+        }
+
+        if (!isMouseClick)
+            return;
+
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //마우스 위치를 Ray로 반환
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Debug.Log("Cube Clicked");
+                Transform target = hit.collider.transform.parent;
+                while (true)
+                {
+                    if (target == null)
+                        return;
+
+                    BaseView baseView = target.GetComponent<BaseView>();
+                    if (baseView == null)
+                    {
+                        target = target.parent;
+                        continue;
+                    }
+
+                    UIController.FocusSort(UIController.GetPresenter(baseView.GetHashCode()));
+                    return;
+                }
+
+                //UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
+            }
+        }
+    }
+
+    private void OnKeyMove()
+    {
+        if (onKeyEventMove == null)
+            return;
+
+        DirectionType heightDirectionType = DirectionType.None;
+        DirectionType widthDirectionType = DirectionType.None;
+        if (Input.GetKey(KeyCode.W))
+            heightDirectionType = DirectionType.Up;
+        else if (Input.GetKey(KeyCode.S))
+            heightDirectionType = DirectionType.Down;
+        if (Input.GetKey(KeyCode.A))
+            widthDirectionType = DirectionType.Left;
+        else if (Input.GetKey(KeyCode.D))
+            widthDirectionType = DirectionType.Right;
+
+        if (heightDirectionType == DirectionType.None && widthDirectionType == DirectionType.None)
+            onKeyEventMove(BodyType.Low, StateType.Idle);
+        else
+            onKeyEventMove(BodyType.Low, StateType.Move, heightDirectionType, widthDirectionType);
+    }
+
+    private void OnKeyAttack()
+    {
+        if (onKeyEventAttack == null)
+            return;
+
+        if (onKeyEventWaiting(BodyType.Up))
+            return;
+
+        //onKeyEventAttack(BodyType.Up, StateType.Idle);
+
+        if (Input.GetMouseButton(MOUSELEFT))
+        {
+            //Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            onKeyEventAttack(BodyType.Up, StateType.Attack);
+        }
+        else if (Input.GetMouseButton(MOUSERIGHT))
+        {
+        }
+        else
+        {
+            onKeyEventAttack(BodyType.Up, StateType.Idle);
+        }
+    }
+
     private bool DisableUI(UIPrefabs uiPrefabs)
     {
         if (UIController.IsOpenVIew(uiPrefabs))
         {
-            UIController.DeleteUI(UIController.GetPresenter(uiPrefabs));
+            UIController.Exit(UIController.GetPresenter(uiPrefabs));
             return true;
         }
 

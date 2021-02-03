@@ -8,8 +8,9 @@ public class EquipTableData : BaseTableData
     // 장비 부위 (타입)
     // 세트 인덱스
 
-    public Status status;
-    public EquipType equipType;
-    public WeaponType weaponType;
-    public string[] path;
+    public Status Status;
+    public EquipType EquipType;
+    public WeaponType WeaponType;
+    public string[] Path;
+    public string Thumbnail;
 }

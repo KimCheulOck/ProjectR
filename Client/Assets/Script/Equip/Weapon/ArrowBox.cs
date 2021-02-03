@@ -10,12 +10,6 @@ public class ArrowBox : Weapon
     private const int ARROWS_MAX = 10;
     private Arrow arrow;
 
-    public override void Initialize(Actor actor)
-    {
-        base.Initialize(actor);
-        Cancel();
-    }
-
     public override void Use(Action action)
     {
         base.Use(action);
@@ -64,6 +58,7 @@ public class ArrowBox : Weapon
             arrow.Show();
             loop++;
             count--;
+            onEventUseProjectile();
 
             yield return new WaitForSeconds(1.0f);
         }

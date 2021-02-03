@@ -20,6 +20,12 @@ public class CategoryButtonUnit : MonoBehaviour
         this.callBack = callBack;
     }
 
+    public void SetCategoryName()
+    {
+        for (int i = 0; i < txtCategoryNames.Length; ++i)        
+            txtCategoryNames[i].SafeSetText(categoryName);        
+    }
+
     public void CategoryOnOff(bool on)
     {
         objOnButton.SafeSetActive(on);

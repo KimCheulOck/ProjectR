@@ -1,24 +1,44 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FlowManager : MonoSingleton<FlowManager>
 {
-    private BaseFlow prevFlow;
+    private Stack prevFlow = new Stack();
     private BaseFlow currentFlow;
     private Coroutine loadingProcess;
 
-    public void ChangeFlow(BaseFlow flow)
+    public void ChangeFlow(BaseFlow flow, bool isStack = false)
     {
         if (currentFlow != null)
-            currentFlow.Exit();
+        {
+            if (isStack)
+                prevFlow.Push(currentFlow);
 
-        prevFlow = currentFlow;
+            currentFlow.Exit();
+        }
+
         currentFlow = flow;
 
         currentFlow.Enter();
 
         if(loadingProcess != null)
+            StopCoroutine(loadingProcess);
+        loadingProcess = StartCoroutine(LoadingProcess());
+    }
+
+    public void BackToFlow()
+    {
+        if (prevFlow.Count == 0)
+            return;
+
+        if (currentFlow != null)
+            currentFlow.Exit();
+
+        currentFlow = (BaseFlow)prevFlow.Pop();
+        
+        currentFlow.Enter();
+
+        if (loadingProcess != null)
             StopCoroutine(loadingProcess);
         loadingProcess = StartCoroutine(LoadingProcess());
     }

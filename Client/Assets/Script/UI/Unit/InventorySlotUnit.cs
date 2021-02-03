@@ -40,6 +40,7 @@ public class InventorySlotUnit : MonoBehaviour
         if (itemSlotUnit != null)
             return;
 
-        itemSlotUnit = Instantiate(loadPrefabs, objActive.transform);
+        //itemSlotUnit = Instantiate(loadPrefabs, objActive.transform);
+        itemSlotUnit = GameManager.CreatePrefabs(loadPrefabs, objActive.transform);
     }
 }

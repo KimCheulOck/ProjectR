@@ -37,6 +37,7 @@ public class EquipView : BaseView
             categoryButtonUnits[i].SafeSetActive(true);
             string categoryName = StringValue.GetString((EquipCategory)i);
             categoryButtonUnits[i].SetCategory(i, categoryName, onEventChangeCategory);
+            categoryButtonUnits[i].SetCategoryName();
             categoryButtonUnits[i].CategoryOnOff(i == categoryIndex);
         }
     }

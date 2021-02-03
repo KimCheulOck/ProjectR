@@ -47,6 +47,7 @@ public class InventoryView : BaseView
             categoryButtonUnits[i].SafeSetActive(true);
             string categoryName = StringValue.GetString((InventoryCategory)i);
             categoryButtonUnits[i].SetCategory(i, categoryName, onEventChangeCategory);
+            categoryButtonUnits[i].SetCategoryName();
             categoryButtonUnits[i].CategoryOnOff(i == categoryIndex);
         }
     }

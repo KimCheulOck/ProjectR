@@ -59,7 +59,7 @@ public class ActionMachine
             return;
         }
 
-        switch (equip.weaponType)
+        switch (equip.WeaponType)
         {
             case WeaponType.Bow:
                 {

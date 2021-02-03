@@ -4,6 +4,12 @@ public enum ObserverMessage
 {
     None = 0,
 
+    RestartApp,
+
+    FindProfile,
+
+
+
     SetPlayer,
 
     ChangeCostume,
@@ -71,6 +77,20 @@ public class ObserverHandler : ISubject
                     continue;
 
                 observers[id][i].RefrashObserver(id, message);
+            }
+        }
+    }
+
+    public static void NotifyObserver2(ObserverMessage id, params object[] message)
+    {
+        if (Instance.observers.ContainsKey(id))
+        {
+            for (int i = 0; i < Instance.observers[id].Count; ++i)
+            {
+                if (Instance.observers[id][i] == null)
+                    continue;
+
+                Instance.observers[id][i].RefrashObserver(id, message);
             }
         }
     }

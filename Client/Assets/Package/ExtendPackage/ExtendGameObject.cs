@@ -33,4 +33,21 @@ public static class ExtendGameObject
 
         tweenGroup.gameObject.SetActive(active);
     }
+
+    public static void ChangeLayer(this MonoBehaviour mono, string name, bool isChild)
+    {
+        if (mono == null)
+            return;
+
+        mono.gameObject.layer = LayerMask.NameToLayer(name);
+
+        Transform[] childs = mono.GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < childs.Length; ++i)
+        {
+            if (childs[i] == null)
+                continue;
+
+            childs[i].gameObject.layer = LayerMask.NameToLayer(name);
+        }
+    }
 }

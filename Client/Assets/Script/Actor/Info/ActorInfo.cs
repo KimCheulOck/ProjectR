@@ -1,4 +1,5 @@
-﻿public class ActorInfo
+﻿[System.Serializable]
+public class ActorInfo
 {
     public Equip[] Equips;
     public Skill[] Skills;
@@ -7,6 +8,7 @@
     public Costume[] DefaultCostume;
 
     public bool IsMy;
+    public bool IsRegist;
 
     public string Name;
     public string Path;

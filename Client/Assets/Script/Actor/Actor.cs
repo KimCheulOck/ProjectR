@@ -6,13 +6,13 @@ public class Actor : MonoBehaviour
     protected EquipController equipController = null;
 
     public Animator basicBody = null;
-    public string ActorTag { get { return actorInfo.Tag; } }
-
     public Status Status { get { return actorInfo.Status; } }
     public Equip[] Equips {get { return actorInfo.Equips; } }
     public Skill[] Skills { get { return actorInfo.Skills; } }
     public Costume[] Costume { get { return actorInfo.Costume; } }
     public Costume[] DefaultCostume { get { return actorInfo.DefaultCostume; } }
+    public string ActorTag { get { return actorInfo.Tag; } }
+    public bool IsMy { get { return actorInfo.IsMy; } }
 
     protected StateMachine stateMachine = null;
     protected ActionMachine actionMachine = null;
@@ -42,30 +42,52 @@ public class Actor : MonoBehaviour
 
     public void ChangeStatus(Status stats)
     {
+        if (actorInfo == null)
+            return;
+
         actorInfo.Status = stats;
     }
 
     public void ChangeEquip(Equip equip, bool isWear)
     {
-        if (actorInfo.Equips[(int)equip.equipType] != null)
+        if (actorInfo == null)
+            return;
+
+        if (actorInfo.Equips[(int)equip.EquipType] != null)
         {
-            actorInfo.Equips[(int)equip.equipType].isWear = false;
-            actorInfo.Equips[(int)equip.equipType] = null;
+            //if (isWear && actorInfo.Equips[(int)equip.equipType].SerialIndex == equip.SerialIndex)
+            //    return;   
+
+            actorInfo.Equips[(int)equip.EquipType].IsWear = false;
+            actorInfo.Equips[(int)equip.EquipType] = null;
+            equipController.SetParts();
         }
 
-        actorInfo.Equips[(int)equip.equipType] = equip;
-        actorInfo.Equips[(int)equip.equipType].isWear = isWear;
+        if (!isWear)
+            return;
+
+        actorInfo.Equips[(int)equip.EquipType] = equip;
+        actorInfo.Equips[(int)equip.EquipType].IsWear = isWear;
         RefreshEquips();
     }
 
     public void RefreshEquips()
     {
-        equipController.SetActor(this);
+        if (actorInfo == null)
+            return;
+
+        equipController.SetMyEquip(IsMy);
+        equipController.SetEquip(Equips);
+        equipController.SetCostume(Costume, DefaultCostume);
+        equipController.SetEvent(Hit, ()=> { return transform.position; });
         equipController.SetParts();
     }
 
     public void ChangeSkills(Skill[] skills)
     {
+        if (actorInfo == null)
+            return;
+
         actorInfo.Skills = skills;
     }
 
@@ -79,9 +101,18 @@ public class Actor : MonoBehaviour
         return stateMachine.GetStateType(bodyType);
     }
 
-    public void Hit(Status attackerStatus)
+    public bool Hit(Actor targetActor)
     {
-        int damage = attackerStatus.attack - Status.defense;
+        if (targetActor == null)
+            return false;
+
+        bool isAttack = (ActorTag == "Player" && targetActor.tag == "Enemy") ||
+                        (ActorTag == "Enemy" && targetActor.tag == "Player");
+
+        if (!isAttack)
+            return false;
+
+        int damage = targetActor.Status.attack - Status.defense;
         if (damage < 0)
             damage = 0;
 
@@ -92,6 +123,8 @@ public class Actor : MonoBehaviour
         }
 
         Debug.Log("damage : " + damage + ", hp : " + Status.hp);
+
+        return true;
     }
 
     private void UseWeapon(BodyType bodyType, StateType stateType, Action action)

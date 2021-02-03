@@ -7,12 +7,13 @@ public class Character : Actor
     [SerializeField]
     private Transform characterTransform;
 
-    public bool IsMy { get { return actorInfo.IsMy; } }
-
     private float angle;
     private Vector2 mouse;
     private Vector3 leftVector = Vector3.one;
     private Vector3 rightVector = new Vector3(-1, 1, 1);
+
+    [SerializeField]
+    private Vector3 axis = new Vector3(0, 0, 2);
 
     public void Initialize()
     {
@@ -35,7 +36,7 @@ public class Character : Actor
 
     private void SetCharacterBodyRotaion()
     {
-        mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouse = CameraController.MainCamera.ScreenToWorldPoint(Input.mousePosition);
 
         characterTransform.localScale = (mouse.x < characterTransform.transform.position.x) ? leftVector : rightVector;
 
@@ -50,7 +51,7 @@ public class Character : Actor
         y = isRight ? (mouse.y - bodyPos.y) : (bodyPos.y - mouse.y);
 
         angle = Mathf.Clamp((Mathf.Atan2(y, x) * Mathf.Rad2Deg), minRotation, maxRotation);
-        bodyTransform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        bodyTransform.rotation = Quaternion.AngleAxis(angle, axis);
     }
 
     private void Update()

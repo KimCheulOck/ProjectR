@@ -6,16 +6,14 @@ public class Weapon : EquipParts
 {
     public GameObject subWeapon = null;
 
-    protected Actor actor;
+    protected System.Func<Actor, bool> onEventHit = null;
+    protected System.Func<Vector3> onEventActorPosition = null;
+    protected System.Action onEventUseProjectile = null;
+
     protected Action action;
     protected GameObject loadObject;
     protected int count;
     protected Coroutine actionCoroutine;
-
-    public virtual void Initialize(Actor actor)
-    {
-        this.actor = actor;
-    }
 
     public virtual void SetLoadObject(GameObject loadObject)
     {
@@ -34,5 +32,14 @@ public class Weapon : EquipParts
 
     public virtual void Cancel()
     {
+    }
+
+    public virtual void SetEvent(System.Func<Actor, bool> onEventHit,
+                         System.Func<Vector3> onEventActorPosition,
+                         System.Action onEventUseProjectile)
+    {
+        this.onEventHit = onEventHit;
+        this.onEventActorPosition = onEventActorPosition;
+        this.onEventUseProjectile = onEventUseProjectile;
     }
 }

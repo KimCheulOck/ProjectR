@@ -33,6 +33,50 @@ public class GameController : MonoBehaviour, IObserver
                     playerControllers.Add(myPlayerController);
                 }
                 break;
+
+            case ObserverMessage.ChangeCostume:
+                {
+                }
+                break;
+
+            case ObserverMessage.ChangeEquip:
+                {
+                    myPlayerController.ChangeEquip(message[0] as Equip, isWear: (bool)message[1]);
+                    if (UIController.IsOpenVIew(UIPrefabs.EquipView))
+                    {
+                        BasePresenter equipPresenter = UIController.GetPresenter(UIPrefabs.EquipView);
+                        equipPresenter.RefreshUI();
+                    }
+
+                    if (UIController.IsOpenVIew(UIPrefabs.InventoryView))
+                    {
+                        BasePresenter inventoryPresenter = UIController.GetPresenter(UIPrefabs.InventoryView);
+                        inventoryPresenter.RefreshUI();
+                    }
+                }
+                break;
+
+            //case ObserverMessage.UnWearEquip:
+            //    {
+            //        myPlayerController.ChangeEquip(message[0] as Equip, isWear: false);
+            //        if (UIController.IsOpenVIew(UIPrefabs.EquipView))
+            //        {
+            //            BasePresenter equipPresenter = UIController.GetPresenter(UIPrefabs.EquipView);
+            //            equipPresenter.RefashUI();
+            //        }
+
+            //        if (UIController.IsOpenVIew(UIPrefabs.InventoryView))
+            //        {
+            //            BasePresenter inventoryPresenter = UIController.GetPresenter(UIPrefabs.InventoryView);
+            //            inventoryPresenter.RefashUI();
+            //        }
+            //    }
+            //    break;
+
+            case ObserverMessage.UseItem:
+                {
+                }
+                break;
         }
     }
 
@@ -49,6 +93,10 @@ public class GameController : MonoBehaviour, IObserver
     private void AdddObserver()
     {
         ObserverHandler.Instance.AddObserver(ObserverMessage.SetPlayer, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.ChangeCostume, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.ChangeEquip, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.UnWearEquip, this);
+        ObserverHandler.Instance.AddObserver(ObserverMessage.UseItem, this);
     }
 
     private void RemoveObserver()

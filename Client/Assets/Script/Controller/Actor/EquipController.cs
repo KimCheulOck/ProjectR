@@ -14,13 +14,39 @@ public class EquipController : MonoBehaviour
     [SerializeField]
     private Parts[] costumeParts = null;
 
-    private Actor actor;
     private Weapon[] weapons = new Weapon[2];
     private StateType[] stateType = new StateType[2];
+    private Equip[] equips = null;
+    private Costume[] costumes = null;
+    private Costume[] defaultCostumes = null;
 
-    public void SetActor(Actor actor)
+    private System.Func<Actor, bool> onEventHit = null;
+    private System.Func<Vector3> onEventActorPosition = null;
+    private System.Action onEventUseProjectile = null;
+    private bool isMy = false;
+
+    public void SetMyEquip(bool isMy)
     {
-        this.actor = actor;
+        this.isMy = isMy;
+    }
+
+    public void SetEquip(Equip[] equips)
+    {
+        this.equips = equips;
+    }
+
+    public void SetCostume(Costume[] costumes, Costume[] defaultCostumes)
+    {
+        this.costumes = costumes;
+        this.defaultCostumes = defaultCostumes;
+    }
+
+    public void SetEvent(System.Func<Actor, bool> onEventHit,
+                         System.Func<Vector3> onEventActorPosition)
+    {
+        this.onEventHit = onEventHit;
+        this.onEventActorPosition = onEventActorPosition;
+        onEventUseProjectile = OnEventUseProjectile;
     }
 
     public void SetParts()
@@ -47,40 +73,34 @@ public class EquipController : MonoBehaviour
 
     public void SetWeaponeParts(EquipType equipType)
     {
-        if (actor.Equips == null)
+        if (equips == null)
             return;
 
         int index = (int)equipType;
-        if (actor.Equips[index] == null)
+        if (equips[index] == null)
         {
             if (weapons[index] == null)
                 return;
 
-            Destroy(weapons[index]);
+            Destroy(weapons[index].gameObject);
+            weapons[index] = null;
         }
         else
         {
-            Weapon loadWeapone = Resources.Load<Weapon>(actor.Equips[index].Path[0]);
-            weapons[index] = Instantiate(loadWeapone, equipParts[index].spriteRenderer[0].transform);
-            weapons[index].Initialize(actor);
-
-            if (actor.Equips[index].weaponType == WeaponType.Bow ||
-                actor.Equips[index].weaponType == WeaponType.Gun)
+            if (weapons[index] == null)
             {
-                int rightIndex = (int)EquipType.RightWeapon;
-                if (weapons[rightIndex] == null)
-                {
-                    weapons[index].SetLoadObject(null);
-                    weapons[index].SetWeaponCount(0);
-                    return;
-                }
-
-                weapons[index].SetLoadObject(weapons[rightIndex].subWeapon);
-                weapons[index].SetWeaponCount(actor.Equips[rightIndex].Count);
+                Weapon loadWeapone = Resources.Load<Weapon>(equips[index].Path[0]);
+                weapons[index] = Instantiate(loadWeapone, equipParts[index].spriteRenderer[0].transform);
+                weapons[index].SetEvent(onEventHit, onEventActorPosition, onEventUseProjectile);
             }
-            else if (actor.Equips[index].weaponType == WeaponType.Projectile)
+
+            if (equipType == EquipType.RightWeapon)
             {
-                weapons[index].SetWeaponCount(actor.Equips[index].Count);
+                SetRightWeaponParts();
+            }
+            else if (equipType == EquipType.LeftWeapon)
+            {
+                SetLeftWeaponParts();
             }
         }
     }
@@ -109,9 +129,66 @@ public class EquipController : MonoBehaviour
         this.stateType[index] = stateType;
     }
 
+    private void SetRightWeaponParts()
+    {
+        int rightIndex = (int)EquipType.RightWeapon;
+        switch (equips[rightIndex].WeaponType)
+        {
+            case WeaponType.Projectile:
+                {
+                    int leftIndex = (int)EquipType.LeftWeapon;
+                    if (equips[leftIndex] == null ||
+                       (equips[leftIndex].WeaponType == WeaponType.Gun &&
+                        equips[leftIndex].WeaponType == WeaponType.Bow))
+                    {
+                        weapons[rightIndex].SetWeaponCount(0);
+                        break;
+                    }
+
+                    weapons[rightIndex].SetWeaponCount(equips[rightIndex].Count);
+                }
+                break;
+
+            default:
+                {
+                    weapons[rightIndex].SetWeaponCount(int.MaxValue);
+                }
+                break;
+        }
+    }
+
+    private void SetLeftWeaponParts()
+    {
+        int leftIndex = (int)EquipType.LeftWeapon;
+        switch (equips[leftIndex].WeaponType)
+        {
+            case WeaponType.Bow:
+            case WeaponType.Gun:
+                {
+                    int rightIndex = (int)EquipType.RightWeapon;
+                    if (weapons[rightIndex] == null)
+                    {
+                        weapons[leftIndex].SetLoadObject(null);
+                        weapons[leftIndex].SetWeaponCount(0);
+                        return;
+                    }
+
+                    weapons[leftIndex].SetLoadObject(weapons[rightIndex].subWeapon);
+                    weapons[leftIndex].SetWeaponCount(equips[rightIndex].Count);
+                }
+                break;
+
+            default:
+                {
+                    weapons[leftIndex].SetWeaponCount(int.MaxValue);
+                }
+                break;
+        }
+    }
+
     private void SetEquipParts(EquipType equipType)
     {
-        if (actor.Equips == null)
+        if (equips == null)
             return;
 
         int index = (int)equipType - (int)EquipType.Head;
@@ -137,15 +214,15 @@ public class EquipController : MonoBehaviour
 
     private bool TakeOnCostumParts(int index)
     {
-        if (actor.Costume[index] == null)
+        if (costumes[index] == null)
             return false;
 
         for (int i = 0; i < costumeParts[index].spriteRenderer.Length; ++i)
         {
-            if (actor.Costume[index].Path.Length == 0)
+            if (costumes[index].Path.Length == 0)
                 continue;
 
-            Sprite sprite = Resources.Load<Sprite>(actor.Costume[index].Path[i]);
+            Sprite sprite = Resources.Load<Sprite>(costumes[index].Path[i]);
             costumeParts[index].spriteRenderer[i].sprite = sprite;
         }
 
@@ -154,15 +231,15 @@ public class EquipController : MonoBehaviour
 
     private bool TakeOnParts(int index)
     {
-        if (actor.Equips[index] == null)
+        if (equips[index] == null)
             return false;
 
         for (int i = 0; i < equipParts[index].spriteRenderer.Length; ++i)
         {
-            if (actor.Equips[index].Path.Length == 0)
+            if (equips[index].Path.Length == 0)
                 continue;
 
-            Sprite sprite = Resources.Load<Sprite>(actor.Equips[index].Path[i]);
+            Sprite sprite = Resources.Load<Sprite>(equips[index].Path[i]);
             equipParts[index].spriteRenderer[i].sprite = sprite;
         }
 
@@ -171,15 +248,15 @@ public class EquipController : MonoBehaviour
 
     private bool TakeOnDefaultCostumParts(int index)
     {
-        if (actor.DefaultCostume[index] == null)
+        if (defaultCostumes[index] == null)
             return false;
 
         for (int i = 0; i < costumeParts[index].spriteRenderer.Length; ++i)
         {
-            if (actor.DefaultCostume[index].Path.Length == 0)
+            if (defaultCostumes[index].Path.Length == 0)
                 continue;
 
-            Sprite sprite = Resources.Load<Sprite>(actor.DefaultCostume[index].Path[i]);
+            Sprite sprite = Resources.Load<Sprite>(defaultCostumes[index].Path[i]);
             costumeParts[index].spriteRenderer[i].sprite = sprite;
         }
 
@@ -188,7 +265,7 @@ public class EquipController : MonoBehaviour
 
     private bool TakeOffParts(int index)
     {
-        if (actor.Equips[index] == null)
+        if (equips[index] == null)
         {
             for (int i = 0; i < equipParts[index].spriteRenderer.Length; ++i)
                 equipParts[index].spriteRenderer[i].sprite = null;
@@ -197,5 +274,24 @@ public class EquipController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void OnEventUseProjectile()
+    {
+        int rightIndex = (int)EquipType.RightWeapon;
+        if (equips[rightIndex].WeaponType == WeaponType.Projectile)
+        {
+            equips[rightIndex].SetCount(equips[rightIndex].Count - 1);
+            if (equips[rightIndex].Count == 0)
+            {
+                if (isMy)
+                    InventoryManager.Instance.RefreshInventory();
+
+                equips[rightIndex] = null;
+
+                SetWeaponeParts(EquipType.RightWeapon);
+                SetWeaponeParts(EquipType.LeftWeapon);
+            }
+        }
     }
 }

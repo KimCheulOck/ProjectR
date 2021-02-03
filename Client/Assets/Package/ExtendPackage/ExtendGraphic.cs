@@ -18,4 +18,13 @@ public static class ExtendGraphic
 
         image.sprite = Resources.Load<Sprite>(path);
     }
+
+    public static void SafeSetSpriteNativeSize(this Image image, string path)
+    {
+        if (image == null)
+            return;
+
+        image.sprite = Resources.Load<Sprite>(path);
+        image.SetNativeSize();
+    }
 }

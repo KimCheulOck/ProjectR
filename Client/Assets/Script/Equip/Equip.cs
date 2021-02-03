@@ -1,29 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Equip : IItem
+﻿public class Equip : IItem
 {
     public ItemType ItemType { get { return ItemType.Equip; } }
     public int Count { get; private set; }
+    public long SerialIndex { get; private set; }
+    public string Thumbnail { get; private set; }    
 
-    public Status status;
-    public EquipType equipType;
-    public WeaponType weaponType;
-    public bool isWear;
+    public Status Status;
+    public EquipType EquipType;
+    public WeaponType WeaponType;
+    public bool IsWear;
     public string[] Path;
+    public int Index;
 
-    public Equip(Status status, EquipType equipType, WeaponType weaponType, bool isWear, string[] path)
+    public Equip(long serialIndex, int index, string[] path, string thumbnail, Status status, EquipType equipType, WeaponType weaponType)
     {
-        this.status = status;
-        this.equipType = equipType;
-        this.weaponType = weaponType;
-        this.isWear = isWear;
-        this.Path = path;
+        SerialIndex = serialIndex;
+        Index = index;
+
+        Path = path;
+        Thumbnail = thumbnail;
+
+        Status = status;
+        EquipType = equipType;
+        WeaponType = weaponType;
     }
 
     public void SetCount(int count)
     {
         Count = count;
+    }
+
+    public void SetWear(bool isWear)
+    {
+        IsWear = isWear;
     }
 }

@@ -12,5 +12,7 @@ public class UINavigator
         Prefabs = prefabs;
         BaseView = prefabs.GetComponent<BaseView>();
         BaseView.SetViewFocusUnit(presenter.GetUIPrefabs());
+        //BaseView.gameObject.layer = LayerMask.NameToLayer("UI");
+        BaseView.ChangeLayer("UI", isChild: true);
     }
 }

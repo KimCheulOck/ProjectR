@@ -40,6 +40,11 @@ public class InventoryPresenter : BasePresenter
         OnEventChangeCategory(categoryIndex);
     }
 
+    public override void RefreshUI()
+    {
+        OnEventChangeCategory(model.categoryIndex);
+    }
+
     public override UIPrefabs GetUIPrefabs()
     {
         return UIPrefabs.InventoryView;

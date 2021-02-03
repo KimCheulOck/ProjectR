@@ -9,9 +9,9 @@ public class Arrow : Weapon
     // 2. 포물선을 그리면서 
     [SerializeField]
     private GameObject objShowGroup = null;
+    [SerializeField]
+    private BoxCollider2D boxCollider = null;
 
-    private string actorTag;
-    private Status status;
     private float speed;
     private float range;
     private float startDelay;
@@ -23,12 +23,6 @@ public class Arrow : Weapon
     private void OnDisable()
     {
         Cancel();
-    }
-
-    public void SetActorData(string actorTag, Status status)
-    {
-        this.actorTag = actorTag;
-        this.status = status;
     }
 
     public void SetShootData(float speed, float range, float startDelay, float angle, Transform arrowParent, Vector3 targetLocation)
@@ -50,6 +44,7 @@ public class Arrow : Weapon
     public void Show()
     {
         objShowGroup.SafeSetActive(true);
+        boxCollider.enabled = false;
     }
 
     private IEnumerator Action()
@@ -59,6 +54,7 @@ public class Arrow : Weapon
         WaitForSeconds time = new WaitForSeconds(0.1f);
 
         objShowGroup.SafeSetActive(true);
+        boxCollider.enabled = true;
         transform.position = arrowParent.position;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.localScale = arrowParent.localScale;
@@ -74,12 +70,14 @@ public class Arrow : Weapon
             {
                 // 최대거리에 도달
                 objShowGroup.SafeSetActive(false);
+                boxCollider.enabled = false;
                 break;
             }
 
             if (distance < speed)
             {
                 objShowGroup.SafeSetActive(false);
+                boxCollider.enabled = false;
                 break;
             }
 
@@ -95,22 +93,18 @@ public class Arrow : Weapon
             StopCoroutine(actionCoroutine);
 
         objShowGroup.SafeSetActive(false);
+        boxCollider.enabled = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isAttack = (actorTag == "Player" && collision.tag == "Enemy") ||
-                        (actorTag == "Enemy" && collision.tag == "Player");
-
-        if (!isAttack)
+        if (collision == null)
             return;
 
-        Actor targetActor = collision.GetComponent<Actor>();
-        if (targetActor == null)
+        if (onEventHit == null)
             return;
 
-        Cancel();
-
-        targetActor.Hit(status);
+        if (onEventHit(collision.GetComponent<Actor>()))
+            Cancel();
     }
 }
